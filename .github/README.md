@@ -1,4 +1,4 @@
-# Multi-Dimensional Search
+# Graph Algorithms
 
 Long Project 4 for CS 5V81 (F18) at The University of Texas at Dallas. 
 
