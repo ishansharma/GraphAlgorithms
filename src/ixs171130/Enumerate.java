@@ -39,10 +39,53 @@ public class Enumerate<T> {
     // n = arr.length, choose k things, d elements arr[0..d-1] done
     // c more elements are needed from arr[d..n-1].  d = k-c.
     public void permute(int c) {  // To do for LP4
+
+        int d;
+
+        if(c == 0)
+            visit(this.arr);
+        else{
+
+            T temp;
+            d = this.k-c;
+            permute(c-1);
+
+            for(int i = d+1;i < this.arr.length; i++){
+
+                temp = this.arr[d];
+                this.arr[d] = this.arr[i];
+                this.arr[i] = temp;
+                permute(c-1);
+                this.arr[i] = this.arr[d];
+                this.arr[d] = temp;
+
+            }
+
+        }
+
+
+
     }
 
     // choose c items from A[0..i-1].  In SP11-opt
     public void combine(int i, int c) {
+
+        T temp;
+
+        if(c == 0)
+            visit(this.arr);
+        else{
+            temp = this.arr[k-c];
+            this.arr[k-c] = this.arr[i];
+            this.arr[i] = temp;
+            combine(i+1,c-1);
+            temp = this.arr[k-c];
+            this.arr[k-c] = this.arr[i];
+            this.arr[i] = temp;
+
+            if( this.arr.length - i > c)
+                combine(i+1, c);
+        }
     }
 
     // Still g elements to go.  In SP11-opt
@@ -126,8 +169,8 @@ public class Enumerate<T> {
     }
 
     public static void main(String args[]) {
-        int n = 4;
-        int k = 3;
+        int n = 6;
+        int k = 2;
         if(args.length > 0) { n = Integer.parseInt(args[0]);  k = n; }
         if(args.length > 1) { k = Integer.parseInt(args[1]); }
         Integer[] arr = new Integer[n];
@@ -153,3 +196,4 @@ public class Enumerate<T> {
         System.out.println("Count: " + e.count + "\n_________________________");
     }
 }
+
