@@ -6,16 +6,15 @@
 
 package rbk;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Graph implements Iterable<Graph.Vertex> {
     AdjList[] adjList;
     int n; // number of verices in the graph
     int m; // number of edges in the graph
     final boolean directed;  // true if graph is directed, false otherwise
+
+
 
     /**
      * Nested class to represent a vertex of a graph
@@ -168,22 +167,19 @@ public class Graph implements Iterable<Graph.Vertex> {
             }
         }
 
-        /** To use hashing with Edge as key, you need to ensure that name is unique
-         */
-        public int hashCode() {
-            return name;
-        }
-
-        /** Edges are equal if they have the same name and connect same ends */
         @Override
-        public boolean equals(Object other) {
-            if(other == null) {
-                return false;
-            }
-            Edge otherEdge = (Edge) other;
-            return this.name == otherEdge.name && this.from.equals(otherEdge.from) && this.to.equals(otherEdge.to);
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Edge edge = (Edge) o;
+            return Objects.equals(from, edge.from) &&
+                    Objects.equals(to, edge.to);
         }
 
+        @Override
+        public int hashCode() {
+            return Objects.hash(from, to);
+        }
 
         /**
          /**
@@ -221,6 +217,8 @@ public class Graph implements Iterable<Graph.Vertex> {
         this.n = g.n;
         this.m = g.m;
     }
+
+
 
     void initialize(int n) {
         adjList = new AdjList[n];

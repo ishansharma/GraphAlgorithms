@@ -42,8 +42,31 @@ public class Enumerate<T> {
 
         int d;
 
-        if(c == 0)
+
+
+        if(c == 0){
+
+            boolean flag = false;
+
+
+
+            for(T ele: this.arr){
+
+                if(!this.app.select(ele)){
+                    flag  = false;
+                    //System.out.println("invalid topological order");
+//                    visit(this.arr);
+                    this.app.clear();
+                    return;
+                }
+
+
+            }
+
             visit(this.arr);
+            this.app.clear();
+
+        }
         else{
 
             T temp;
@@ -110,6 +133,10 @@ public class Enumerate<T> {
         /* Extend permutation by item? */
         public boolean select(T item) { return true; }
 
+        public void clear(){
+            return ;
+        }
+
         /* Backtrack selected item */
         public void unselect(T item) { }
 
@@ -169,8 +196,8 @@ public class Enumerate<T> {
     }
 
     public static void main(String args[]) {
-        int n = 6;
-        int k = 2;
+        int n = 5;
+        int k = 3;
         if(args.length > 0) { n = Integer.parseInt(args[0]);  k = n; }
         if(args.length > 1) { k = Integer.parseInt(args[1]); }
         Integer[] arr = new Integer[n];
