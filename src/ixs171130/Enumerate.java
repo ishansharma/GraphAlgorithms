@@ -42,51 +42,33 @@ public class Enumerate<T> {
 
         int d;
 
-
-
         if(c == 0){
 
-            boolean flag = false;
-
-
-
-            for(T ele: this.arr){
-
-                if(!this.app.select(ele)){
-                    flag  = false;
-                    //System.out.println("invalid topological order");
-//                    visit(this.arr);
-                    this.app.clear();
-                    return;
-                }
-
-
-            }
-
             visit(this.arr);
-            this.app.clear();
-
         }
         else{
 
             T temp;
             d = this.k-c;
-            permute(c-1);
 
-            for(int i = d+1;i < this.arr.length; i++){
+            /**
+             * if approver returns true, swap the elements and permute.
+             * Once permute is complte, perform unslect operation and swap back.
+             */
 
-                temp = this.arr[d];
-                this.arr[d] = this.arr[i];
-                this.arr[i] = temp;
-                permute(c-1);
-                this.arr[i] = this.arr[d];
-                this.arr[d] = temp;
+            for(int i = d;i < this.arr.length; i++){
 
+                if(this.app.select(this.arr[i])){
+                    temp = this.arr[d];
+                    this.arr[d] = this.arr[i];
+                    this.arr[i] = temp;
+                    permute(c-1);
+                    this.arr[i] = this.arr[d];
+                    this.arr[d] = temp;
+                    this.app.unselect(this.arr[i]);
+                }
             }
-
         }
-
-
 
     }
 
@@ -201,6 +183,7 @@ public class Enumerate<T> {
         if(args.length > 0) { n = Integer.parseInt(args[0]);  k = n; }
         if(args.length > 1) { k = Integer.parseInt(args[1]); }
         Integer[] arr = new Integer[n];
+//        Integer[] arr = {1,3,2,4};
         for (int i = 0; i < n; i++) {
             arr[i] = i+1;
         }

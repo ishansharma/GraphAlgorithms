@@ -16,106 +16,73 @@ public class EnumerateTopological extends GraphAlgorithm<EnumerateTopological.En
     long count;      // Number of permutations or combinations visited
     Selector sel;
 
-    HashSet<EdgeHandle> edgeSet;
-
-
 
     public EnumerateTopological(Graph g) {
-        super(g, new EnumVertex());
+        super(g, new EnumVertex(null));
         print = false;
         count = 0;
-        sel = new Selector(g.getVertex(1));
-        edgeSet = new HashSet<>();
-
-
-        for(Vertex u: g) {
-
-            for(Edge e: g.incident(u)){
-                edgeSet.add(new EdgeHandle(e.fromVertex(),e.toVertex()));
-            }
-        }
-
+        sel = new Selector();
+        // Initialized the indegree of all the vertices of the Graph.
+        initializeIndegree(g);
 
     }
 
 
 
     static class EnumVertex implements Factory {
-        EnumVertex() { }
-        public EnumVertex make(Vertex u) { return new EnumVertex();	}
+
+        int inDegree  = 0;
+        Vertex u;
+
+        EnumVertex(Vertex v) {
+            u = v;
+        }
+        public EnumVertex make(Vertex u) { return new EnumVertex(u);	}
     }
 
-//    Selector getSelector()
-//    {
-//        return new Selector();
-//    }
 
     public  class Selector extends Enumerate.Approver<Vertex> {
 
-        Vertex startVertex;
+        public Selector(){
 
-        Deque<Vertex> de_que;
-
-//        public Selector(){
-//
-//        }
-
-        public Selector(Vertex v){
-
-            de_que  = new ArrayDeque<Vertex>(10);
-            startVertex = v;
         }
 
-        public Selector(int size,Vertex v){
-
-            de_que  = new ArrayDeque<Vertex>(size);
-            startVertex = v;
-        }
-
-        public void clear()
-        {
-            de_que.clear();
-        }
-
-
+        /**
+         *
+         * @param u Vertex  u of the graph to be Approved.
+         * @return true if the indegree of u is zero. else return false.
+         *
+         * if approvedm update the indegree of the incident vertices.
+         */
 
         @Override
         public boolean select(Vertex u) {
 
-            if(de_que.isEmpty()){
+            if(get(u).inDegree == 0){
 
-                if(u.equals(startVertex))
-                {
-                    de_que.push(u);
-                    return true;
+                for(Edge e: g.incident(u)){
+                    get(e.otherEnd(u)).inDegree--;
                 }
-                else{
-                    return false;
-                }
-            }
-            else{
-                Vertex v = de_que.peek();
-                EdgeHandle e = new EdgeHandle(v,u);
 
-                if(edgeSet.contains(e)){
-                    de_que.push(u);
-                    return true;
-                }
-                else{
-                    return false;
-                }
+                return true;
             }
 
+            return false;
         }
 
 
-
+        /**
+         *
+         * @param u - Vertex  u of the graph to be Approved.
+         * update the indegree of the incident vertices.
+         */
         @Override
         public void unselect(Vertex u) {
 
-            if(!de_que.isEmpty()){
-                de_que.pop();
+            for(Edge e: g.incident(u)){
+                get(e.otherEnd(u)).inDegree++;
             }
+
         }
 
         @Override
@@ -130,33 +97,36 @@ public class EnumerateTopological extends GraphAlgorithm<EnumerateTopological.En
         }
     }
 
+    /**
+     *
+     * @param g
+     * Initialize the indegree of all the vertices.
+     */
+    public void initializeIndegree(Graph g){
+
+        for(Vertex u: g) {
+
+            for(Edge e: g.incident(u)){
+                get(e.otherEnd(u)).inDegree++;
+            }
+        }
+    }
+
 
     // To do: LP4; return the number of topological orders of g
     public long enumerateTopological(boolean flag) {
         print = flag;
 
-        Vertex[] input = new Vertex[g.size()];
-
-//        input[0] = g.getVertex(1);
-//        input[1] = g.getVertex(3);
-//        input[2] = g.getVertex(2);
-//        input[3] = g.getVertex(4);
-//        input[4] = g.getVertex(5);
-//        input[5] = g.getVertex(6);
-
-
-        int index  = 0;
-
-
-
-        for(Vertex v : g){
-            input[index++] = v;
-//            System.out.println(this.sel.select(v));
+        Vertex[] input = new Vertex[g.size()]; // creating an array of all the vertices in the graph to be passed to permute.
+        int i = 0;
+        for(Vertex u : g)
+        {
+            input[i] = u;
+            i++;
         }
 
-        Enumerate<Vertex> enumVertex = new Enumerate<Vertex>(input,input.length - 2,this.sel);
-//
-        enumVertex.permute(input.length - 2);
+        Enumerate<Vertex> enumVertex = new Enumerate<Vertex>(input,input.length ,this.sel); // passed approver for topological order.
+        enumVertex.permute(input.length);
 
         return count;
     }
