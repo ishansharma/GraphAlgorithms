@@ -86,7 +86,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
 
         // loop 1: calculate earliest completion time
         for(Vertex u: topologicalOrder) {
-            for(Edge e: g.outEdges(u)) {
+            for(Edge e: g.incident(u)) {
                 if(get(e.fromVertex()).ec + get(e.toVertex()).d > get(e.toVertex()).ec) {
                     get(e.toVertex()).ec = get(e.fromVertex()).ec + get(e.toVertex()).d;
                 }
@@ -102,7 +102,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
         // Iterator learned from: https://stackoverflow.com/posts/3227002/revisions
         for(Iterator it = topologicalOrder.descendingIterator(); it.hasNext();) {
             Vertex u = (Vertex) it.next();
-            for(Edge e: g.outEdges(u)) {
+            for(Edge e: g.incident(u)) {
                 if(get(e.toVertex()).lc - get(e.toVertex()).d < get(e.fromVertex()).lc) {
                     get(e.fromVertex()).lc = get(e.toVertex()).lc - get(e.toVertex()).d;
                 }
