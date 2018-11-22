@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.*;
 
 public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
+    private int criticalNodes;
+
     public static class PERTVertex implements Factory {
         int ec, lc, slack, d;  // earliest, latest completion time, slack, duration of the task
         boolean critical; // is this vertex on a critical path
@@ -47,6 +49,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
      */
     public PERT(Graph g) {
         super(g, new PERTVertex(null));
+        criticalNodes = 0;
     }
 
     /**
@@ -111,6 +114,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
             get(u).critical = false;
             if(get(u).slack == 0) {
                 get(u).critical = true;
+                criticalNodes++;
             }
         }
 
@@ -138,7 +142,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
     }
 
     public int numCritical() {
-        return 0;
+        return criticalNodes;
     }
 
     /**
