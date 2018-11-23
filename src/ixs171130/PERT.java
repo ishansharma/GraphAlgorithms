@@ -164,6 +164,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
 
     public static void main(String[] args) throws Exception {
         String graph = "11 12   2 4 1   2 5 1   3 5 1   3 6 1   4 7 1   5 7 1   5 8 1   6 8 1   6 9 1   7 10 1   8 10 1   9 10 1      0 3 2 3 2 1 3 2 4 1 0";
+//        String graph = "9 8  2 3 1  3 4 1  2 5 1  5 8 1  2 6 1  6 7 1  4 8 1  7 8 1    0 1 3 3 6 3 3 1 0";
         Scanner in;
         // If there is a command line argument, use it as file from which
         // input is read, otherwise use input from string.
@@ -180,6 +181,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
             System.out.println("Invalid graph: not a DAG");
         } else {
             System.out.println("Number of critical vertices: " + p.numCritical());
+            System.out.println("Critical path length: " + p.criticalPath());
             System.out.println("u\tEC\tLC\tSlack\tCritical");
             for (Vertex u : g) {
                 System.out.println(u + "\t" + p.ec(u) + "\t" + p.lc(u) + "\t" + p.slack(u) + "\t" + p.critical(u));
