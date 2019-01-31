@@ -19,7 +19,6 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
     public static class PERTVertex implements Factory {
         int ec, lc, slack, d;  // earliest, latest completion time, slack, duration of the task
         boolean critical; // is this vertex on a critical path
-        Vertex v;
 
         /**
          * Constructor to create a PERTVertex from a normal graph vertex
@@ -27,7 +26,6 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
          * @param u Original Vertex
          */
         public PERTVertex(Vertex u) {
-            v = u; // no need to duplicate everything, just store reference to the original vertex
             d = 0; // number of days required to make
 
             critical = false;
